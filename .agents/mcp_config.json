@@ -1,0 +1,15 @@
+{
+  "mcpServers": {
+    "notebooklm": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "notebooklm-mcp"
+      ],
+      "env": {
+        "PATH": "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
+      },
+      "disabled": false
+    }
+  }
+}

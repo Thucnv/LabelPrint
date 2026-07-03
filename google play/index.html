@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy Policy - Label Print</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4F46E5;
+            --primary-hover: #4338CA;
+            --bg-gradient-start: #F9FAFB;
+            --bg-gradient-end: #F3F4F6;
+            --card-bg: #FFFFFF;
+            --text-main: #1F2937;
+            --text-muted: #4B5563;
+            --border-color: #E5E7EB;
+            --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.02);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        [data-theme="dark"] {
+            --primary: #6366F1;
+            --primary-hover: #4F46E5;
+            --bg-gradient-start: #0F172A;
+            --bg-gradient-end: #1E293B;
+            --card-bg: #1E293B;
+            --text-main: #F9FAFB;
+            --text-muted: #9CA3AF;
+            --border-color: #334155;
+            --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.2);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+            color: var(--text-main);
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 2rem 1rem;
+            transition: var(--transition);
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .controls {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            align-items: center;
+        }
+
+        .btn {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            padding: 0.5rem 1rem;
+            border-radius: 9999px;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 0.875rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .btn:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            transform: translateY(-1px);
+        }
+
+        .btn-active {
+            background-color: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .btn-active:hover {
+            background-color: var(--primary-hover);
+            color: white;
+        }
+
+        .logo-container {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--primary) 0%, #818CF8 100%);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 25px -5px rgba(79, 70, 229, 0.4);
+            margin-bottom: 1rem;
+        }
+
+        .logo-icon {
+            color: white;
+            font-size: 2.5rem;
+            font-weight: 700;
+        }
+
+        h1 {
+            font-size: 2.25rem;
+            font-weight: 700;
+            letter-spacing: -0.025em;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(to right, var(--primary), #818CF8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 1rem;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            padding: 2.5rem;
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(10px);
+            transition: var(--transition);
+        }
+
+        h2 {
+            font-size: 1.35rem;
+            font-weight: 600;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+            border-left: 4px solid var(--primary);
+            padding-left: 0.75rem;
+        }
+
+        h2:first-of-type {
+            margin-top: 0;
+        }
+
+        p, li {
+            color: var(--text-muted);
+            font-size: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        ul {
+            margin-left: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        li {
+            margin-bottom: 0.5rem;
+        }
+
+        .contact-box {
+            background: linear-gradient(135deg, rgba(79, 70, 229, 0.05) 0%, rgba(129, 140, 248, 0.05) 100%);
+            border: 1px solid rgba(79, 70, 229, 0.1);
+            padding: 1.5rem;
+            border-radius: 16px;
+            margin-top: 2rem;
+        }
+
+        .contact-box p {
+            margin-bottom: 0.5rem;
+        }
+
+        .contact-box p:last-child {
+            margin-bottom: 0;
+        }
+
+        a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        a:hover {
+            color: var(--primary-hover);
+            text-decoration: underline;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 3rem;
+            color: var(--text-muted);
+            font-size: 0.875rem;
+        }
+
+        /* Language visibility toggle */
+        [lang="vi"] .en, [lang="en"] .vi {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <div class="controls">
+                <button class="btn btn-active" id="btn-vi" onclick="setLang('vi')">Tiếng Việt</button>
+                <button class="btn" id="btn-en" onclick="setLang('en')">English</button>
+                <button class="btn" id="btn-theme" onclick="toggleTheme()">
+                    <span id="theme-icon">🌙</span>
+                </button>
+            </div>
+            
+            <div class="logo-container">
+                <span class="logo-icon">LP</span>
+            </div>
+            
+            <h1 class="vi">Chính Sách Bảo Mật</h1>
+            <h1 class="en">Privacy Policy</h1>
+            
+            <p class="subtitle vi">Ứng dụng in nhãn chuyên nghiệp - Label Print</p>
+            <p class="subtitle en">Professional Label Printing Application - Label Print</p>
+        </header>
+
+        <main class="card">
+            <!-- TIẾNG VIỆT -->
+            <div class="vi">
+                <h2>1. Giới thiệu</h2>
+                <p>Chào mừng bạn đến với <strong>Label Print</strong> ("chúng tôi", "ứng dụng"). Chúng tôi cam kết bảo vệ quyền riêng tư của người dùng. Chính sách bảo mật này giải thích cách chúng tôi xử lý thông tin khi bạn sử dụng ứng dụng di động Label Print.</p>
+
+                <h2>2. Thu thập và sử dụng thông tin</h2>
+                <p>Chúng tôi luôn nỗ lực tối đa để hạn chế việc thu thập thông tin cá nhân. Đối với các tính năng cơ bản của ứng dụng:</p>
+                <ul>
+                    <li><strong>Không thu thập thông tin cá nhân:</strong> Chúng tôi không yêu cầu bạn tạo tài khoản, cung cấp tên, email, hoặc số điện thoại để sử dụng các tính năng in ấn cơ bản.</li>
+                    <li><strong>Dữ liệu thiết kế nhãn:</strong> Các mẫu nhãn thiết kế, hình ảnh và nội dung do bạn tạo ra được lưu trữ trực tiếp trên bộ nhớ thiết bị của bạn. Chúng tôi không tải chúng lên bất kỳ máy chủ nào.</li>
+                </ul>
+
+                <h2>3. Quyền truy cập thiết bị</h2>
+                <p>Để cung cấp đầy đủ chức năng, ứng dụng có thể yêu cầu một số quyền truy cập sau:</p>
+                <ul>
+                    <li><strong>Bluetooth (Kết nối Máy In):</strong> Được sử dụng để tìm kiếm, ghép nối và truyền lệnh in đến các máy in nhãn nhiệt Bluetooth tương thích. Chúng tôi không sử dụng quyền này để định vị vị trí của bạn ngoài mục đích kỹ thuật cần thiết để quét Bluetooth trên các phiên bản Android cũ.</li>
+                    <li><strong>Bộ nhớ / Tập tin (Storage):</strong> Được sử dụng để bạn có thể tải lên các file ảnh, file PDF hoặc lưu trữ các thiết kế nhãn trực tiếp trên máy của mình.</li>
+                    <li><strong>Camera:</strong> Được sử dụng nếu bạn muốn chụp ảnh trực tiếp và đưa vào thiết kế nhãn in của mình.</li>
+                </ul>
+
+                <h2>4. Dịch vụ bên thứ ba & Quảng cáo</h2>
+                <p>Ứng dụng có tích hợp các dịch vụ bên thứ ba nhằm mục đích hiển thị quảng cáo hoặc phân tích kỹ thuật:</p>
+                <ul>
+                    <li><strong>Google AdMob:</strong> Chúng tôi sử dụng Google Mobile Ads SDK để hiển thị quảng cáo trong ứng dụng. Google có thể thu thập mã nhận dạng quảng cáo (Ad ID) trên thiết bị của bạn để cung cấp quảng cáo cá nhân hóa.</li>
+                    <li>Bạn có thể đọc thêm về chính sách của Google tại: <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">Chính sách bảo mật của Google</a>.</li>
+                </ul>
+
+                <h2>5. Bảo mật dữ liệu</h2>
+                <p>Vì dữ liệu in ấn và thiết kế của bạn được lưu cục bộ trên thiết bị, mức độ bảo mật của các thiết kế này phụ thuộc trực tiếp vào bảo mật thiết bị cá nhân của bạn. Chúng tôi khuyên bạn nên sử dụng các biện pháp bảo vệ thiết bị tiêu chuẩn (mật khẩu, vân tay) để ngăn chặn truy cập trái phép.</p>
+
+                <h2>6. Thay đổi đối với chính sách bảo mật này</h2>
+                <p>Chúng tôi có thể cập nhật Chính sách Bảo mật này định kỳ. Mọi thay đổi sẽ có hiệu lực ngay khi chúng tôi đăng tải Chính sách Bảo mật mới lên trang này. Bạn nên kiểm tra lại định kỳ để cập nhật.</p>
+
+                <div class="contact-box">
+                    <h2>Liên hệ với chúng tôi</h2>
+                    <p>Nếu bạn có bất kỳ câu hỏi hoặc góp ý nào về Chính sách Bảo mật của chúng tôi, xin vui lòng liên hệ:</p>
+                    <p><strong>Email:</strong> support@labelprinter.com</p>
+                </div>
+            </div>
+
+            <!-- ENGLISH -->
+            <div class="en">
+                <h2>1. Introduction</h2>
+                <p>Welcome to <strong>Label Print</strong> ("we", "the app"). We are committed to protecting our users' privacy. This Privacy Policy explains how we handle information when you use the Label Print mobile application.</p>
+
+                <h2>2. Information Collection and Use</h2>
+                <p>We strive to minimize the collection of personal information. For the primary features of the application:</p>
+                <ul>
+                    <li><strong>No Personal Information Collected:</strong> We do not require you to create an account, or provide your name, email, or phone number to use the basic printing features.</li>
+                    <li><strong>Label Design Data:</strong> Designed label templates, images, and content you create are stored locally on your device. We do not upload them to any remote server.</li>
+                </ul>
+
+                <h2>3. Device Permissions</h2>
+                <p>To provide full functionality, the app may request the following permissions:</p>
+                <ul>
+                    <li><strong>Bluetooth (Printer Connection):</strong> Used to scan, pair, and send print commands to compatible Bluetooth thermal label printers. We do not use this permission to track your location other than what is technically required for Bluetooth scanning on older Android versions.</li>
+                    <li><strong>Storage / Files:</strong> Used to allow you to import images, PDFs, or save your label designs directly on your device.</li>
+                    <li><strong>Camera:</strong> Used if you wish to take photos directly within the app and insert them into your label designs.</li>
+                    <li><strong>Location (Android older versions):</strong> On some older Android versions, location permission may be requested to perform Bluetooth scans. We do not track or store your location data.</li>
+                </ul>
+
+                <h2>4. Third-Party Services & Advertising</h2>
+                <p>The app integrates third-party services for displaying advertisements and technical analysis:</p>
+                <ul>
+                    <li><strong>Google AdMob:</strong> We use the Google Mobile Ads SDK to display ads. Google may collect your device's advertising identifier (Ad ID) to deliver personalized ads.</li>
+                    <li>You can learn more about Google's policy at: <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">Google Privacy & Terms</a>.</li>
+                </ul>
+
+                <h2>5. Data Security</h2>
+                <p>Since your print and design data is saved locally on your device, the security of these designs depends directly on your device's security. We recommend using standard device protection (passcode, biometric lock) to prevent unauthorized access.</p>
+
+                <h2>6. Changes to This Privacy Policy</h2>
+                <p>We may update our Privacy Policy from time to time. Any changes are effective immediately when posted on this page. You are advised to review this page periodically for any changes.</p>
+
+                <div class="contact-box">
+                    <h2>Contact Us</h2>
+                    <p>If you have any questions or suggestions about our Privacy Policy, please feel free to contact us:</p>
+                    <p><strong>Email:</strong> support@labelprinter.com</p>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <p>&copy; 2026 Label Print. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <script>
+        function setLang(lang) {
+            document.documentElement.lang = lang;
+            
+            const btnVi = document.getElementById('btn-vi');
+            const btnEn = document.getElementById('btn-en');
+            
+            if (lang === 'vi') {
+                btnVi.classList.add('btn-active');
+                btnEn.classList.remove('btn-active');
+            } else {
+                btnEn.classList.add('btn-active');
+                btnVi.classList.remove('btn-active');
+            }
+            
+            localStorage.setItem('preferred-lang', lang);
+        }
+
+        function toggleTheme() {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            
+            document.documentElement.setAttribute('data-theme', newTheme);
+            document.getElementById('theme-icon').textContent = newTheme === 'dark' ? '☀️' : '🌙';
+            localStorage.setItem('theme', newTheme);
+        }
+
+        // Initialize language and theme preferences
+        const savedLang = localStorage.getItem('preferred-lang') || 'vi';
+        setLang(savedLang);
+
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme) {
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            document.getElementById('theme-icon').textContent = savedTheme === 'dark' ? '☀️' : '🌙';
+        } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            document.documentElement.setAttribute('data-theme', 'dark');
+            document.getElementById('theme-icon').textContent = '☀️';
+        }
+    </script>
+</body>
+</html>

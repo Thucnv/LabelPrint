@@ -1,0 +1,357 @@
+{
+  "@@locale": "vi",
+  "@@last_modified": "2026-06-16",
+
+  "appTitle": "Label Print",
+  "@appTitle": { "description": "Tên ứng dụng" },
+
+  "homeTitle": "Trang chủ",
+  "@homeTitle": { "description": "Tiêu đề trang chủ" },
+
+  "printerManagement": "Quản lý máy in",
+  "@printerManagement": { "description": "Tiêu đề màn hình quản lý máy in" },
+
+  "printConfig": "Cấu hình in",
+  "@printConfig": { "description": "Tiêu đề cấu hình in" },
+
+  "saveTemplate": "Lưu mẫu in",
+  "@saveTemplate": { "description": "Nút lưu mẫu in" },
+
+  "barcodePrinting": "In mã vạch",
+  "@barcodePrinting": { "description": "Tiêu đề in mã vạch" },
+
+  "featureBarcode": "Mã vạch",
+  "@featureBarcode": { "description": "Tính năng in mã vạch" },
+
+  "featureQr": "Mã QR",
+  "@featureQr": { "description": "Tính năng in mã QR" },
+
+  "featureLabel": "Nhãn hàng",
+  "@featureLabel": { "description": "Tính năng in nhãn" },
+
+  "featureShipping": "Vận đơn",
+  "@featureShipping": { "description": "Tính năng in vận đơn" },
+
+  "featureReceipt": "Hóa đơn",
+  "@featureReceipt": { "description": "Tính năng in hóa đơn" },
+
+  "featurePdf": "In PDF",
+  "@featurePdf": { "description": "Tính năng in file PDF" },
+
+  "featureImage": "In ảnh",
+  "@featureImage": { "description": "Tính năng in hình ảnh" },
+
+  "featureDelivery": "Phiếu giao hàng",
+  "@featureDelivery": { "description": "Tính năng in phiếu giao hàng" },
+
+  "printerStatusReady": "Sẵn sàng",
+  "@printerStatusReady": { "description": "Trạng thái máy in sẵn sàng" },
+
+  "printerStatusIdle": "Chờ",
+  "@printerStatusIdle": { "description": "Trạng thái máy in chờ" },
+
+  "printerStatusError": "Lỗi",
+  "@printerStatusError": { "description": "Trạng thái máy in lỗi" },
+
+  "printerNotConfigured": "Chưa cấu hình",
+  "@printerNotConfigured": { "description": "Máy in chưa được cấu hình" },
+
+  "addPrinter": "Thêm máy in",
+  "@addPrinter": { "description": "Nút thêm máy in mới" },
+
+  "editPrinter": "Sửa máy in",
+  "@editPrinter": { "description": "Nút chỉnh sửa máy in" },
+
+  "deletePrinter": "Xóa máy in",
+  "@deletePrinter": { "description": "Nút xóa máy in" },
+
+  "testConnection": "Kiểm tra kết nối",
+  "@testConnection": { "description": "Nút test kết nối" },
+
+  "scanDevices": "Quét thiết bị",
+  "@scanDevices": { "description": "Nút quét tìm thiết bị" },
+
+  "printerName": "Tên máy in",
+  "@printerName": { "description": "Label tên máy in" },
+
+  "printerType": "Loại máy in",
+  "@printerType": { "description": "Label loại máy in" },
+
+  "connectionMethod": "Phương thức kết nối",
+  "@connectionMethod": { "description": "Label phương thức kết nối" },
+
+  "ipAddress": "Địa chỉ IP",
+  "@ipAddress": { "description": "Label địa chỉ IP" },
+
+  "port": "Cổng",
+  "@port": { "description": "Label cổng kết nối" },
+
+  "setDefault": "Đặt mặc định",
+  "@setDefault": { "description": "Nút đặt máy in mặc định" },
+
+  "paperSize": "Khổ giấy",
+  "@paperSize": { "description": "Label khổ giấy" },
+
+  "paperType": "Loại giấy",
+  "@paperType": { "description": "Label loại giấy" },
+
+  "orientation": "Hướng in",
+  "@orientation": { "description": "Label hướng in" },
+
+  "portrait": "Dọc",
+  "@portrait": { "description": "Hướng in dọc" },
+
+  "landscape": "Ngang",
+  "@landscape": { "description": "Hướng in ngang" },
+
+  "marginTop": "Lề trên",
+  "@marginTop": { "description": "Label lề trên" },
+
+  "marginLeft": "Lề trái",
+  "@marginLeft": { "description": "Label lề trái" },
+
+  "marginRight": "Lề phải",
+  "@marginRight": { "description": "Label lề phải" },
+
+  "printDarkness": "Độ đậm in",
+  "@printDarkness": { "description": "Label độ đậm nét in" },
+
+  "printSpeed": "Tốc độ in",
+  "@printSpeed": { "description": "Label tốc độ in" },
+
+  "scalingMode": "Chế độ tỷ lệ",
+  "@scalingMode": { "description": "Label chế độ tỷ lệ" },
+
+  "fitWidth": "Vừa chiều rộng",
+  "@fitWidth": { "description": "Chế độ vừa chiều rộng" },
+
+  "fitHeight": "Vừa chiều cao",
+  "@fitHeight": { "description": "Chế độ vừa chiều cao" },
+
+  "customScale": "Tùy chỉnh",
+  "@customScale": { "description": "Chế độ tỷ lệ tùy chỉnh" },
+
+  "templateName": "Tên mẫu",
+  "@templateName": { "description": "Label tên mẫu in" },
+
+  "saveConfig": "Lưu cấu hình",
+  "@saveConfig": { "description": "Nút lưu cấu hình" },
+
+  "saveAsTemplate": "Lưu thành mẫu",
+  "@saveAsTemplate": { "description": "Nút lưu thành mẫu" },
+
+  "barcodeData": "Dữ liệu mã vạch",
+  "@barcodeData": { "description": "Label dữ liệu mã vạch" },
+
+  "barcodeType": "Loại mã vạch",
+  "@barcodeType": { "description": "Label loại mã vạch" },
+
+  "barcodeHeight": "Chiều cao mã vạch",
+  "@barcodeHeight": { "description": "Label chiều cao mã vạch" },
+
+  "showReadableText": "Hiển thị chữ dưới mã",
+  "@showReadableText": { "description": "Toggle hiện text dưới mã vạch" },
+
+  "continuePrint": "In tiếp",
+  "@continuePrint": { "description": "Nút tiếp tục in" },
+
+  "printNow": "In ngay",
+  "@printNow": { "description": "Nút in ngay" },
+
+  "errPrinterNameEmpty": "Vui lòng nhập tên máy in",
+  "@errPrinterNameEmpty": { "description": "Lỗi tên máy in trống" },
+
+  "errIpInvalid": "Địa chỉ IP không hợp lệ",
+  "@errIpInvalid": { "description": "Lỗi IP không đúng định dạng" },
+
+  "errDuplicateAddress": "Địa chỉ này đã được sử dụng",
+  "@errDuplicateAddress": { "description": "Lỗi trùng địa chỉ máy in" },
+
+  "errConnectionFailed": "Không thể kết nối đến máy in",
+  "@errConnectionFailed": { "description": "Lỗi kết nối thất bại" },
+
+  "errPaperSizeRange": "Kích thước giấy phải từ 20mm đến 220mm",
+  "@errPaperSizeRange": { "description": "Lỗi kích thước giấy ngoài phạm vi" },
+
+  "errScaleRange": "Tỷ lệ phải từ 50% đến 200%",
+  "@errScaleRange": { "description": "Lỗi tỷ lệ ngoài phạm vi" },
+
+  "errEan13Format": "Mã EAN-13 phải có đúng 13 chữ số",
+  "@errEan13Format": { "description": "Lỗi định dạng EAN-13" },
+
+  "errCode128Ascii": "Mã Code128 chỉ hỗ trợ ký tự ASCII",
+  "@errCode128Ascii": { "description": "Lỗi ký tự không hợp lệ cho Code128" },
+
+  "successPrinterAdded": "Đã thêm máy in thành công",
+  "@successPrinterAdded": { "description": "Thông báo thêm máy in thành công" },
+
+  "successTestPrint": "In thử thành công",
+  "@successTestPrint": { "description": "Thông báo in thử thành công" },
+
+  "successConfigSaved": "Đã lưu cấu hình",
+  "@successConfigSaved": { "description": "Thông báo lưu cấu hình thành công" },
+
+  "successTemplateSaved": "Đã lưu mẫu in",
+  "@successTemplateSaved": { "description": "Thông báo lưu mẫu thành công" },
+
+  "successPrintSent": "Đã gửi lệnh in",
+  "@successPrintSent": { "description": "Thông báo gửi lệnh in thành công" },
+
+  "cancel": "Hủy",
+  "@cancel": { "description": "Nút hủy" },
+
+  "save": "Lưu",
+  "@save": { "description": "Nút lưu" },
+
+  "delete": "Xóa",
+  "@delete": { "description": "Nút xóa" },
+
+  "edit": "Sửa",
+  "@edit": { "description": "Nút sửa" },
+
+  "confirm": "Xác nhận",
+  "@confirm": { "description": "Nút xác nhận" },
+
+  "retry": "Thử lại",
+  "@retry": { "description": "Nút thử lại" },
+
+  "bluetooth": "Bluetooth",
+  "@bluetooth": { "description": "Kết nối Bluetooth" },
+
+  "wifi": "Wi-Fi",
+  "@wifi": { "description": "Kết nối Wi-Fi" },
+
+  "labelPrinterTspl": "Máy in nhãn (TSPL)",
+  "@labelPrinterTspl": { "description": "Loại máy in nhãn TSPL" },
+
+  "receiptPrinterEscpos": "Máy in hóa đơn (ESC/POS)",
+  "@receiptPrinterEscpos": { "description": "Loại máy in hóa đơn ESC/POS" },
+
+  "printerTypeLabel": "Máy in nhãn",
+  "@printerTypeLabel": { "description": "Loại máy in nhãn" },
+
+  "printerTypeReceipt": "Máy in hóa đơn",
+  "@printerTypeReceipt": { "description": "Loại máy in hóa đơn" },
+
+  "defaultPrinter": "Máy in mặc định",
+  "@defaultPrinter": { "description": "Label máy in mặc định" },
+
+  "noPrintersFound": "Chưa có máy in nào",
+  "@noPrintersFound": { "description": "Thông báo chưa có máy in" },
+
+  "deleteConfirmTitle": "Xác nhận xóa",
+  "@deleteConfirmTitle": { "description": "Tiêu đề dialog xác nhận xóa" },
+
+  "deleteConfirmMessage": "Bạn có chắc muốn xóa máy in này không?",
+  "@deleteConfirmMessage": { "description": "Nội dung dialog xác nhận xóa" },
+
+  "paperSizeA5": "A5 (148 × 210 mm)",
+  "@paperSizeA5": { "description": "Khổ giấy A5" },
+
+  "paperSizeA6": "A6 (105 × 148 mm)",
+  "@paperSizeA6": { "description": "Khổ giấy A6" },
+
+  "paperSizeA7": "A7 (74 × 105 mm)",
+  "@paperSizeA7": { "description": "Khổ giấy A7" },
+
+  "paperSizeA8": "A8 (52 × 74 mm)",
+  "@paperSizeA8": { "description": "Khổ giấy A8" },
+
+  "paperSizeCustom": "Tùy chỉnh",
+  "@paperSizeCustom": { "description": "Khổ giấy tùy chỉnh" },
+
+  "paperTypeLabel": "Nhãn",
+  "@paperTypeLabel": { "description": "Loại giấy nhãn" },
+
+  "paperTypeContinuous": "Liên tục",
+  "@paperTypeContinuous": { "description": "Loại giấy liên tục" },
+
+  "paperTypeBlackMark": "Đánh dấu đen",
+  "@paperTypeBlackMark": { "description": "Loại giấy đánh dấu đen" },
+
+  "scalingFitWidth": "Vừa chiều rộng",
+  "@scalingFitWidth": { "description": "Tỷ lệ vừa chiều rộng" },
+
+  "scalingFitHeight": "Vừa chiều cao",
+  "@scalingFitHeight": { "description": "Tỷ lệ vừa chiều cao" },
+
+  "scalingCustom": "Tùy chỉnh",
+  "@scalingCustom": { "description": "Tỷ lệ tùy chỉnh" },
+
+  "customWidth": "Chiều rộng tùy chỉnh",
+  "@customWidth": { "description": "Label chiều rộng tùy chỉnh" },
+
+  "customHeight": "Chiều cao tùy chỉnh",
+  "@customHeight": { "description": "Label chiều cao tùy chỉnh" },
+
+  "printHistory": "Lịch sử in",
+  "@printHistory": { "description": "Tiêu đề lịch sử in" },
+
+  "templates": "Mẫu in",
+  "@templates": { "description": "Tiêu đề danh sách mẫu in" },
+
+  "darknessSetting": "Độ đậm: {value}",
+  "@darknessSetting": {
+    "description": "Hiển thị giá trị độ đậm",
+    "placeholders": {
+      "value": {
+        "type": "int",
+        "example": "8"
+      }
+    }
+  },
+
+  "speedSetting": "Tốc độ: {value} inch/s",
+  "@speedSetting": {
+    "description": "Hiển thị giá trị tốc độ in",
+    "placeholders": {
+      "value": {
+        "type": "double",
+        "format": "decimalPattern",
+        "example": "4.0"
+      }
+    }
+  },
+
+  "printPreview": "Xem trước bản in",
+  "@printPreview": { "description": "Tiêu đề màn hình xem trước bản in" },
+
+  "configInfo": "Thông tin cấu hình",
+  "@configInfo": { "description": "Tiêu đề thông tin cấu hình" },
+
+  "marginInfo": "Lề: {top}/{left}/{right}mm",
+  "@marginInfo": {
+    "description": "Hiển thị thông số lề",
+    "placeholders": {
+      "top": { "type": "double", "example": "0" },
+      "left": { "type": "double", "example": "0" },
+      "right": { "type": "double", "example": "0" }
+    }
+  },
+
+  "darknessInfo": "Độ đậm: {value}",
+  "@darknessInfo": {
+    "description": "Hiển thị độ đậm in",
+    "placeholders": {
+      "value": { "type": "int", "example": "8" }
+    }
+  },
+
+  "previewLoading": "Đang tải preview...",
+  "@previewLoading": { "description": "Thông báo đang tải preview" },
+
+  "previewError": "Lỗi tải preview",
+  "@previewError": { "description": "Thông báo lỗi preview" },
+
+  "copies": "Số bản sao",
+  "@copies": { "description": "Label số bản sao" },
+
+  "zoomIn": "Phóng to",
+  "@zoomIn": { "description": "Tooltip nút phóng to" },
+
+  "zoomOut": "Thu nhỏ",
+  "@zoomOut": { "description": "Tooltip nút thu nhỏ" },
+
+  "fitScreen": "Vừa màn hình",
+  "@fitScreen": { "description": "Tooltip nút vừa màn hình" }
+}
