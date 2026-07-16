@@ -43,3 +43,7 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Native debug symbols and zip archives
+native-debug-symbols.zip
+*.zip
