@@ -33,16 +33,24 @@ class PrintDocument implements UseCase<void, PrintDocumentParams> {
   Future<Either<Failure, void>> call(PrintDocumentParams params) async {
     int? jobId;
     try {
-      // 1. Lấy thông tin máy in mặc định
+      // 1. Lấy thông tin máy in mặc định — xử lý trong một lần fold duy nhất
       final printerResult = await printerRepository.getDefaultPrinter();
-      if (printerResult.isLeft()) {
-        return Left(printerResult.fold((l) => l, (r) => throw Exception()));
-      }
 
-      final Printer? printer = printerResult.fold((l) => null, (r) => r);
+      // Trả về Left ngay nếu repository trả lỗi
+      Failure? printerFailure;
+      Printer? printer;
+      printerResult.fold(
+        (failure) => printerFailure = failure,
+        (value) => printer = value,
+      );
+
+      if (printerFailure != null) return Left(printerFailure!);
       if (printer == null) {
         return const Left(PrinterFailure(message: 'Chưa cấu hình máy in mặc định'));
       }
+      // Từ đây printer được đảm bảo non-null (đã qua null-guard ở trên).
+      // Dùng ! vì Dart analyzer không thể suy luận non-null qua closure của fold().
+      final Printer resolvedPrinter = printer!;
 
       // 2. Giải mã và điều chỉnh kích thước hình ảnh để phù hợp với độ phân giải/khổ giấy của máy in
       // Điều này giúp tránh tràn bộ đệm máy in (buffer overflow) và in ra các ký tự rác/mảng byte
@@ -54,7 +62,7 @@ class PrintDocument implements UseCase<void, PrintDocumentParams> {
       
       // Tính toán kích thước đích (đơn vị dot/pixel)
       int targetWidth;
-      if (printer.protocol == PrinterProtocol.tspl) {
+      if (resolvedPrinter.protocol == PrinterProtocol.tspl) {
         targetWidth = (params.config.effectiveWidthMm * 8.0).toInt();
       } else {
         // ESC/POS cho máy in receipt (K80: 576 dots, K57: 384 dots)
@@ -130,7 +138,7 @@ class PrintDocument implements UseCase<void, PrintDocumentParams> {
 
       // 4. Tạo lịch sử PrintJob (trạng thái PENDING)
       final printJob = PrintJob(
-        printerId: printer.id!,
+        printerId: resolvedPrinter.id!,
         jobName: params.jobName,
         documentType: params.documentType,
         copies: params.copies,
@@ -142,7 +150,7 @@ class PrintDocument implements UseCase<void, PrintDocumentParams> {
 
       // 5. Sinh tập lệnh in dựa trên protocol của máy in
       final Uint8List printBytes;
-      if (printer.protocol == PrinterProtocol.tspl) {
+      if (resolvedPrinter.protocol == PrinterProtocol.tspl) {
         // Tính toán tọa độ bù lề (margin) theo đơn vị dot (8 dots/mm cho 203 DPI)
         final xDots = (params.config.marginLeft * 8).toInt();
         final yDots = (params.config.marginTop * 8).toInt();
@@ -179,15 +187,15 @@ class PrintDocument implements UseCase<void, PrintDocumentParams> {
       }
 
       // 6. Gửi bytes lệnh in tới máy in
-      if (printer.protocol == PrinterProtocol.tspl) {
-        await PrinterSender.send(printer: printer, bytes: printBytes);
+      if (resolvedPrinter.protocol == PrinterProtocol.tspl) {
+        await PrinterSender.send(printer: resolvedPrinter, bytes: printBytes);
       } else {
         // ESC/POS: lặp lại mảng bytes copies lần trong 1 luồng gửi duy nhất
         final bytesBuilder = BytesBuilder();
         for (int i = 0; i < params.copies; i++) {
           bytesBuilder.add(printBytes);
         }
-        await PrinterSender.send(printer: printer, bytes: bytesBuilder.toBytes());
+        await PrinterSender.send(printer: resolvedPrinter, bytes: bytesBuilder.toBytes());
       }
 
       // 7. Cập nhật trạng thái PrintJob thành SUCCESS

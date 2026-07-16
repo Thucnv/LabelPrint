@@ -70,6 +70,7 @@
   "errIpInvalid": "Invalid IP address",
   "errDuplicateAddress": "This address is already in use",
   "errConnectionFailed": "Unable to connect to the printer",
+  "errInvalidImageData": "Invalid image data",
   "errPaperSizeRange": "Paper size must be between 20mm and 220mm",
   "errScaleRange": "Scale must be between 50% and 200%",
   "errEan13Format": "EAN-13 code must contain exactly 13 digits",

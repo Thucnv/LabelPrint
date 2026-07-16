@@ -177,6 +177,9 @@ class AppLocalizationsVi extends AppLocalizations {
   String get errConnectionFailed => 'Không thể kết nối đến máy in';
 
   @override
+  String get errInvalidImageData => 'Dữ liệu hình ảnh không hợp lệ';
+
+  @override
   String get errPaperSizeRange => 'Kích thước giấy phải từ 20mm đến 220mm';
 
   @override

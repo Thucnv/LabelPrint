@@ -434,6 +434,12 @@ abstract class AppLocalizations {
   /// **'Không thể kết nối đến máy in'**
   String get errConnectionFailed;
 
+  /// Lỗi định dạng ảnh/bytes không đúng cấu hình
+  ///
+  /// In vi, this message translates to:
+  /// **'Dữ liệu hình ảnh không hợp lệ'**
+  String get errInvalidImageData;
+
   /// Lỗi kích thước giấy ngoài phạm vi
   ///
   /// In vi, this message translates to:

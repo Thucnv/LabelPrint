@@ -170,6 +170,9 @@
   "errConnectionFailed": "Không thể kết nối đến máy in",
   "@errConnectionFailed": { "description": "Lỗi kết nối thất bại" },
 
+  "errInvalidImageData": "Dữ liệu hình ảnh không hợp lệ",
+  "@errInvalidImageData": { "description": "Lỗi định dạng ảnh/bytes không đúng cấu hình" },
+
   "errPaperSizeRange": "Kích thước giấy phải từ 20mm đến 220mm",
   "@errPaperSizeRange": { "description": "Lỗi kích thước giấy ngoài phạm vi" },
 

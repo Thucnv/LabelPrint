@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 /// KHÔNG sử dụng mã màu Hex trực tiếp trong Widget.
 /// Luôn gọi qua [AppColors.primary], [AppColors.background], v.v.
 abstract final class AppColors {
-  // ─── PRIMARY (Indigo) ─────────────────────────────────────
+  // ─── PRIMARY (Indigo) ───────────────────────────────────────
   /// Indigo 600 - Nút hành động chính, link, active tab
   static const Color primary = Color(0xFF4F46E5);
 
@@ -21,7 +21,14 @@ abstract final class AppColors {
   /// White - Text trên nền primary
   static const Color onPrimary = Color(0xFFFFFFFF);
 
-  // ─── SURFACE & BACKGROUND (Slate) ─────────────────────────
+  // ─── ACCENT (Blue) ───────────────────────────────────────
+  /// Blue 700 - AppBar PrintPreview, icon/button accent trong panel in
+  static const Color accent = Color(0xFF0963C5);
+
+  /// White - Text/icon trên nền accent
+  static const Color onAccent = Color(0xFFFFFFFF);
+
+  // ─── SURFACE & BACKGROUND (Slate) ───────────────────────────
   /// Slate 50 - Nền sáng chính của toàn app
   static const Color background = Color(0xFFF8FAFC);
 
@@ -30,6 +37,9 @@ abstract final class AppColors {
 
   /// Slate 100 - Nền phụ, section background
   static const Color surfaceVariant = Color(0xFFF1F5F9);
+
+  /// Slate 150 - Nền panel cài đặt trong PrintPreview (hơi đậm hơn surfaceVariant)
+  static const Color backgroundSecondary = Color(0xFFEFF3F8);
 
   // ─── TEXT (Slate) ─────────────────────────────────────────
   /// Slate 800 - Text chính (tiêu đề, body text)

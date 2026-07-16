@@ -5,6 +5,7 @@ import 'dart:ui' as ui;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pdfx/pdfx.dart';
 
+import '../../../domain/entities/preview_data.dart';
 import '../../../domain/entities/printer_config.dart';
 import '../../../domain/entities/enums/print_enums.dart';
 import '../../../domain/entities/printer.dart';
@@ -39,13 +40,13 @@ class PrintPreviewCubit extends Cubit<PrintPreviewState> {
         ));
 
   /// Tải cấu hình mặc định của máy in mặc định và danh sách bản mẫu
-  Future<void> loadPrinterDefaultConfig(Map<String, dynamic> extraData) async {
+  Future<void> loadPrinterDefaultConfig(PreviewData previewData) async {
     emit(state.copyWith(isLoading: true, errorMessage: null));
 
     int totalPages = 1;
-    if (state.documentType == DocumentType.pdf) {
-      final pdfPath = extraData['pdfPath'] as String?;
-      if (pdfPath != null && pdfPath.isNotEmpty) {
+    if (state.documentType == DocumentType.pdf && previewData is PdfPreviewData) {
+      final pdfPath = previewData.pdfPath;
+      if (pdfPath.isNotEmpty) {
         try {
           String cleanPath = pdfPath;
           if (cleanPath.startsWith('file://')) {
@@ -74,16 +75,16 @@ class PrintPreviewCubit extends Cubit<PrintPreviewState> {
     );
 
     final printerResult = await getDefaultPrinterUsecase(const NoParams());
-    
+
     await printerResult.fold(
       (failure) async {
         emit(state.copyWith(templates: templates, totalPages: totalPages));
-        await generatePreview(extraData);
+        await generatePreview(previewData);
       },
       (Printer? printer) async {
         if (printer == null) {
           emit(state.copyWith(templates: templates, totalPages: totalPages));
-          await generatePreview(extraData);
+          await generatePreview(previewData);
           return;
         }
 
@@ -91,7 +92,7 @@ class PrintPreviewCubit extends Cubit<PrintPreviewState> {
         await configResult.fold(
           (failure) async {
             emit(state.copyWith(templates: templates, totalPages: totalPages));
-            await generatePreview(extraData);
+            await generatePreview(previewData);
           },
           (PrinterConfig? config) async {
             if (config != null) {
@@ -105,7 +106,7 @@ class PrintPreviewCubit extends Cubit<PrintPreviewState> {
             } else {
               emit(state.copyWith(templates: templates, totalPages: totalPages));
             }
-            await generatePreview(extraData);
+            await generatePreview(previewData);
           },
         );
       },
@@ -144,7 +145,7 @@ class PrintPreviewCubit extends Cubit<PrintPreviewState> {
     final newOrientation = (rotation == 90 || rotation == 270)
         ? Orientation.landscape
         : Orientation.portrait;
-    
+
     final newConfig = state.config.copyWith(orientation: newOrientation);
     emit(state.copyWith(config: newConfig, rotation: rotation));
   }
@@ -174,57 +175,79 @@ class PrintPreviewCubit extends Cubit<PrintPreviewState> {
     emit(state.copyWith(copies: copies));
   }
 
-  /// Cập nhật ảnh preview
-  void updatePreviewImage(Uint8List image) {
-    ui.decodeImageFromList(image, (decodedImage) {
+  /// Cập nhật ảnh preview trực tiếp từ bytes.
+  ///
+  /// Dùng async/await với [ui.instantiateImageCodec] thay vì callback-based
+  /// [ui.decodeImageFromList] để tránh race condition khi Cubit bị close.
+  Future<void> updatePreviewImage(Uint8List image) async {
+    try {
+      final codec = await ui.instantiateImageCodec(image);
+      final frame = await codec.getNextFrame();
       if (!isClosed) {
         emit(state.copyWith(
           previewImage: image,
-          imageWidth: decodedImage.width,
-          imageHeight: decodedImage.height,
+          imageWidth: frame.image.width,
+          imageHeight: frame.image.height,
         ));
       }
-    });
+    } catch (e) {
+      if (!isClosed) {
+        emit(state.copyWith(errorMessage: 'Không thể giải mã ảnh preview: $e'));
+      }
+    }
   }
 
-  /// Sinh preview bitmap từ dữ liệu
-  Future<void> generatePreview(Map<String, dynamic> data) async {
+  /// Sinh preview bitmap từ dữ liệu [PreviewData].
+  ///
+  /// Dùng async/await với [ui.instantiateImageCodec] thay vì callback-based
+  /// [ui.decodeImageFromList] để tránh race condition khi Cubit bị close.
+  Future<void> generatePreview(PreviewData previewData) async {
     emit(state.copyWith(isLoading: true, errorMessage: null));
 
     final result = await generatePreviewUsecase(GeneratePreviewParams(
       documentType: state.documentType,
-      data: data,
+      previewData: previewData,
       config: state.config,
     ));
 
-    result.fold(
-      (failure) => emit(state.copyWith(
-        errorMessage: failure.message,
-        isLoading: false,
-      )),
-      (bytes) {
-        ui.decodeImageFromList(bytes, (image) {
+    await result.fold(
+      (failure) async {
+        if (!isClosed) {
+          emit(state.copyWith(
+            errorMessage: failure.message,
+            isLoading: false,
+          ));
+        }
+      },
+      (bytes) async {
+        try {
+          final codec = await ui.instantiateImageCodec(bytes);
+          final frame = await codec.getNextFrame();
           if (!isClosed) {
             emit(state.copyWith(
               previewImage: bytes,
-              imageWidth: image.width,
-              imageHeight: image.height,
+              imageWidth: frame.image.width,
+              imageHeight: frame.image.height,
               isLoading: false,
             ));
           }
-        });
+        } catch (e) {
+          if (!isClosed) {
+            emit(state.copyWith(
+              errorMessage: 'Không thể giải mã ảnh preview: $e',
+              isLoading: false,
+            ));
+          }
+        }
       },
     );
   }
 
   /// Thay đổi trang PDF hiện tại
-  Future<void> updatePdfPage(int page, Map<String, dynamic> extraData) async {
+  Future<void> updatePdfPage(int page, PdfPreviewData previewData) async {
     if (page < 1 || page > state.totalPages) return;
     emit(state.copyWith(currentPage: page));
-    
-    final updatedData = Map<String, dynamic>.from(extraData);
-    updatedData['pageNumber'] = page;
-    await generatePreview(updatedData);
+    await generatePreview(previewData.copyWithPage(page));
   }
 
   /// Thực hiện gửi lệnh in tài liệu hiện tại

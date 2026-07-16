@@ -177,6 +177,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get errConnectionFailed => 'Unable to connect to the printer';
 
   @override
+  String get errInvalidImageData => 'Invalid image data';
+
+  @override
   String get errPaperSizeRange => 'Paper size must be between 20mm and 220mm';
 
   @override

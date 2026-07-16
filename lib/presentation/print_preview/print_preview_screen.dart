@@ -6,6 +6,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:label_print/core/l10n/app_localizations.dart';
 
 import '../../core/di/injection_container.dart';
+import '../../core/theme/app_colors.dart';
+import '../../domain/entities/preview_data.dart';
 import '../../domain/entities/printer_config.dart';
 import '../../domain/entities/enums/print_enums.dart' as print_enums;
 import 'bloc/print_preview_cubit.dart';
@@ -39,6 +41,7 @@ class _PrintPreviewScreenState extends State<PrintPreviewScreen> {
   late final TextEditingController _marginLeftController;
   late final TextEditingController _marginRightController;
   late final PrintPreviewCubit _cubit;
+  PreviewData? _previewData;
 
   @override
   void initState() {
@@ -83,6 +86,14 @@ class _PrintPreviewScreenState extends State<PrintPreviewScreen> {
       return print_enums.DocumentType.receipt;
     }();
 
+    if (widget.extraData != null) {
+      try {
+        _previewData = previewDataFromMap(widget.extraData!);
+      } catch (e) {
+        debugPrint('PrintPreviewScreen: Không thể parse extraData: $e');
+      }
+    }
+
     _cubit = PrintPreviewCubit(
       generatePreviewUsecase: sl(),
       getDefaultPrinterUsecase: sl(),
@@ -98,8 +109,8 @@ class _PrintPreviewScreenState extends State<PrintPreviewScreen> {
     }
 
     // Load default printer config and generate preview immediately if extra data is provided
-    if (widget.extraData != null) {
-      _cubit.loadPrinterDefaultConfig(widget.extraData!);
+    if (_previewData != null) {
+      _cubit.loadPrinterDefaultConfig(_previewData!);
     }
   }
 
@@ -117,8 +128,8 @@ class _PrintPreviewScreenState extends State<PrintPreviewScreen> {
   void _debouncedGeneratePreview(PrintPreviewCubit cubit) {
     _debounceTimer?.cancel();
     _debounceTimer = Timer(const Duration(milliseconds: 300), () {
-      if (widget.extraData != null) {
-        cubit.generatePreview(widget.extraData!);
+      if (_previewData != null) {
+        cubit.generatePreview(_previewData!);
       }
     });
   }
@@ -167,21 +178,21 @@ class _PrintPreviewScreenState extends State<PrintPreviewScreen> {
     return BlocProvider<PrintPreviewCubit>(
       create: (context) => _cubit,
       child: Scaffold(
-        backgroundColor: const Color(0xFFEFF3F8),
+        backgroundColor: AppColors.backgroundSecondary,
         appBar: AppBar(
           title: const Text(
             'Xem trước & in tem',
             style: TextStyle(
-              color: Colors.white,
+              color: AppColors.onAccent,
               fontWeight: FontWeight.bold,
               fontSize: 18,
             ),
           ),
           elevation: 0,
-          backgroundColor: const Color(0xFF0963C5),
+          backgroundColor: AppColors.accent,
           centerTitle: true,
           leading: IconButton(
-            icon: const Icon(Icons.arrow_back, color: Colors.white),
+            icon: const Icon(Icons.arrow_back, color: AppColors.onAccent),
             onPressed: () => Navigator.of(context).pop(),
           ),
         ),
@@ -191,7 +202,7 @@ class _PrintPreviewScreenState extends State<PrintPreviewScreen> {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text(l10n.successPrintSent),
-                  backgroundColor: const Color(0xFF28A745),
+                  backgroundColor: AppColors.success,
                   behavior: SnackBarBehavior.floating,
                 ),
               );
@@ -200,7 +211,7 @@ class _PrintPreviewScreenState extends State<PrintPreviewScreen> {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text(state.errorMessage!),
-                  backgroundColor: const Color(0xFFDC3545),
+                  backgroundColor: AppColors.error,
                   behavior: SnackBarBehavior.floating,
                 ),
               );
@@ -309,18 +320,18 @@ class _PrintPreviewScreenState extends State<PrintPreviewScreen> {
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(24),
                                   ),
-                                  color: Colors.white,
+                                  color: AppColors.surface,
                                   child: Padding(
                                     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                                     child: Row(
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
                                         IconButton(
-                                          icon: const Icon(Icons.navigate_before, color: Color(0xFF0963C5)),
-                                          onPressed: state.currentPage > 1
+                                          icon: const Icon(Icons.navigate_before, color: AppColors.accent),
+                                          onPressed: state.currentPage > 1 && _previewData is PdfPreviewData
                                               ? () => cubit.updatePdfPage(
                                                   state.currentPage - 1,
-                                                  widget.extraData!,
+                                                  _previewData! as PdfPreviewData,
                                                 )
                                               : null,
                                         ),
@@ -330,16 +341,16 @@ class _PrintPreviewScreenState extends State<PrintPreviewScreen> {
                                           style: const TextStyle(
                                             fontSize: 14,
                                             fontWeight: FontWeight.bold,
-                                            color: Color(0xFF1E293B),
+                                            color: AppColors.onSurface,
                                           ),
                                         ),
                                         const SizedBox(width: 8),
                                         IconButton(
-                                          icon: const Icon(Icons.navigate_next, color: Color(0xFF0963C5)),
-                                          onPressed: state.currentPage < state.totalPages
+                                          icon: const Icon(Icons.navigate_next, color: AppColors.accent),
+                                          onPressed: state.currentPage < state.totalPages && _previewData is PdfPreviewData
                                               ? () => cubit.updatePdfPage(
                                                   state.currentPage + 1,
-                                                  widget.extraData!,
+                                                  _previewData! as PdfPreviewData,
                                                 )
                                               : null,
                                         ),
@@ -357,7 +368,7 @@ class _PrintPreviewScreenState extends State<PrintPreviewScreen> {
                 Flexible(
                   child: SingleChildScrollView(
                     child: Container(
-                      color: const Color(0xFFEFF3F8),
+                      color: AppColors.backgroundSecondary,
                       padding: const EdgeInsets.symmetric(vertical: 12),
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
@@ -367,7 +378,7 @@ class _PrintPreviewScreenState extends State<PrintPreviewScreen> {
                         margin: const EdgeInsets.symmetric(horizontal: 16),
                         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                         decoration: BoxDecoration(
-                          color: Colors.white,
+                          color: AppColors.surface,
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Row(
@@ -377,7 +388,7 @@ class _PrintPreviewScreenState extends State<PrintPreviewScreen> {
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w600,
-                                color: Color(0xFF1E293B),
+                                color: AppColors.onSurface,
                               ),
                             ),
                             const Spacer(),
@@ -388,25 +399,25 @@ class _PrintPreviewScreenState extends State<PrintPreviewScreen> {
                                 isExpanded: true,
                                 decoration: InputDecoration(
                                   filled: true,
-                                  fillColor: const Color(0xFFF8FAFC),
+                                  fillColor: AppColors.background,
                                   contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(8),
-                                    borderSide: const BorderSide(color: Color(0xFFE2E8F0)),
+                                    borderSide: const BorderSide(color: AppColors.divider),
                                   ),
                                   enabledBorder: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(8),
-                                    borderSide: const BorderSide(color: Color(0xFFE2E8F0)),
+                                    borderSide: const BorderSide(color: AppColors.divider),
                                   ),
                                   focusedBorder: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(8),
-                                    borderSide: const BorderSide(color: Color(0xFF0963C5), width: 1.5),
+                                    borderSide: const BorderSide(color: AppColors.accent, width: 1.5),
                                   ),
                                 ),
-                                icon: const Icon(Icons.keyboard_arrow_down, color: Color(0xFF64748B)),
+                                icon: const Icon(Icons.keyboard_arrow_down, color: AppColors.onSurfaceVariant),
                                 style: const TextStyle(
                                   fontSize: 14,
-                                  color: Color(0xFF1E293B),
+                                  color: AppColors.onSurface,
                                   fontWeight: FontWeight.w500,
                                 ),
                                 items: [
@@ -429,14 +440,14 @@ class _PrintPreviewScreenState extends State<PrintPreviewScreen> {
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         mainAxisSize: MainAxisSize.min,
                                         children: [
-                                          Divider(height: 1, color: Color(0xFFCBD5E1)),
+                                          Divider(height: 1, color: AppColors.shimmer),
                                           SizedBox(height: 4),
                                           Text(
                                             'BẢN MẪU CỦA TÔI',
                                             style: TextStyle(
                                               fontSize: 10,
                                               fontWeight: FontWeight.bold,
-                                              color: Color(0xFF64748B),
+                                              color: AppColors.onSurfaceVariant,
                                             ),
                                           ),
                                         ],
@@ -549,7 +560,7 @@ class _PrintPreviewScreenState extends State<PrintPreviewScreen> {
                         margin: const EdgeInsets.symmetric(horizontal: 16),
                         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                         decoration: BoxDecoration(
-                          color: Colors.white,
+                          color: AppColors.surface,
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Row(
@@ -559,7 +570,7 @@ class _PrintPreviewScreenState extends State<PrintPreviewScreen> {
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w600,
-                                color: Color(0xFF1E293B),
+                                color: AppColors.onSurface,
                               ),
                             ),
                             const Spacer(),
@@ -570,25 +581,25 @@ class _PrintPreviewScreenState extends State<PrintPreviewScreen> {
                                 isExpanded: true,
                                 decoration: InputDecoration(
                                   filled: true,
-                                  fillColor: const Color(0xFFF8FAFC),
+                                  fillColor: AppColors.background,
                                   contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(8),
-                                    borderSide: const BorderSide(color: Color(0xFFE2E8F0)),
+                                    borderSide: const BorderSide(color: AppColors.divider),
                                   ),
                                   enabledBorder: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(8),
-                                    borderSide: const BorderSide(color: Color(0xFFE2E8F0)),
+                                    borderSide: const BorderSide(color: AppColors.divider),
                                   ),
                                   focusedBorder: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(8),
-                                    borderSide: const BorderSide(color: Color(0xFF0963C5), width: 1.5),
+                                    borderSide: const BorderSide(color: AppColors.accent, width: 1.5),
                                   ),
                                 ),
-                                icon: const Icon(Icons.keyboard_arrow_down, color: Color(0xFF64748B)),
+                                icon: const Icon(Icons.keyboard_arrow_down, color: AppColors.onSurfaceVariant),
                                 style: const TextStyle(
                                   fontSize: 14,
-                                  color: Color(0xFF1E293B),
+                                  color: AppColors.onSurface,
                                   fontWeight: FontWeight.w500,
                                 ),
                                 items: const [
@@ -623,7 +634,7 @@ class _PrintPreviewScreenState extends State<PrintPreviewScreen> {
                         margin: const EdgeInsets.symmetric(horizontal: 16),
                         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                         decoration: BoxDecoration(
-                          color: Colors.white,
+                          color: AppColors.surface,
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Row(
@@ -633,7 +644,7 @@ class _PrintPreviewScreenState extends State<PrintPreviewScreen> {
                               style: const TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w600,
-                                color: Color(0xFF1E293B),
+                                color: AppColors.onSurface,
                               ),
                             ),
                             const Spacer(),
@@ -692,7 +703,7 @@ class _PrintPreviewScreenState extends State<PrintPreviewScreen> {
                         margin: const EdgeInsets.symmetric(horizontal: 16),
                         padding: const EdgeInsets.all(16),
                         decoration: BoxDecoration(
-                          color: Colors.white,
+                          color: AppColors.surface,
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Column(
@@ -703,7 +714,7 @@ class _PrintPreviewScreenState extends State<PrintPreviewScreen> {
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w600,
-                                color: Color(0xFF1E293B),
+                                color: AppColors.onSurface,
                               ),
                             ),
                             const SizedBox(height: 12),
@@ -792,7 +803,7 @@ class _PrintPreviewScreenState extends State<PrintPreviewScreen> {
                         margin: const EdgeInsets.symmetric(horizontal: 16),
                         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                         decoration: BoxDecoration(
-                          color: Colors.white,
+                          color: AppColors.surface,
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Row(
@@ -802,16 +813,16 @@ class _PrintPreviewScreenState extends State<PrintPreviewScreen> {
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w600,
-                                color: Color(0xFF1E293B),
+                                color: AppColors.onSurface,
                               ),
                             ),
                             Expanded(
                               child: SliderTheme(
                                 data: SliderTheme.of(context).copyWith(
-                                  activeTrackColor: const Color(0xFF0963C5),
-                                  inactiveTrackColor: const Color(0xFFEFF3F8),
-                                  thumbColor: const Color(0xFF0963C5),
-                                  overlayColor: const Color(0xFF0963C5).withValues(alpha: 0.12),
+                                  activeTrackColor: AppColors.accent,
+                                  inactiveTrackColor: AppColors.backgroundSecondary,
+                                  thumbColor: AppColors.accent,
+                                  overlayColor: AppColors.accent.withValues(alpha: 0.12),
                                   trackHeight: 4,
                                   thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 8),
                                 ),
@@ -849,7 +860,7 @@ class _PrintPreviewScreenState extends State<PrintPreviewScreen> {
                                       style: const TextStyle(
                                         fontSize: 16,
                                         fontWeight: FontWeight.bold,
-                                        color: Color(0xFF1E293B),
+                                        color: AppColors.onSurface,
                                       ),
                                     ),
                                   ),
@@ -875,7 +886,7 @@ class _PrintPreviewScreenState extends State<PrintPreviewScreen> {
                         margin: const EdgeInsets.symmetric(horizontal: 16),
                         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                         decoration: BoxDecoration(
-                          color: Colors.white,
+                          color: AppColors.surface,
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Row(
@@ -885,7 +896,7 @@ class _PrintPreviewScreenState extends State<PrintPreviewScreen> {
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w600,
-                                color: Color(0xFF1E293B),
+                                color: AppColors.onSurface,
                               ),
                             ),
                             const Spacer(),
@@ -910,7 +921,7 @@ class _PrintPreviewScreenState extends State<PrintPreviewScreen> {
                                       style: const TextStyle(
                                         fontSize: 16,
                                         fontWeight: FontWeight.bold,
-                                        color: Color(0xFF1E293B),
+                                        color: AppColors.onSurface,
                                       ),
                                     ),
                                   ),
@@ -941,16 +952,16 @@ class _PrintPreviewScreenState extends State<PrintPreviewScreen> {
                     bottom: 16 + MediaQuery.of(context).padding.bottom,
                   ),
                   decoration: const BoxDecoration(
-                    color: Colors.white,
-                    border: Border(top: BorderSide(color: Color(0xFFE2E8F0))),
+                    color: AppColors.surface,
+                    border: Border(top: BorderSide(color: AppColors.divider)),
                   ),
                   child: SizedBox(
                     width: double.infinity,
                     height: 50,
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF0963C5),
-                        foregroundColor: Colors.white,
+                        backgroundColor: AppColors.accent,
+                        foregroundColor: AppColors.onAccent,
                         elevation: 0,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
@@ -989,14 +1000,14 @@ class _PrintPreviewScreenState extends State<PrintPreviewScreen> {
                     child: Container(
                       padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 24),
                       decoration: BoxDecoration(
-                        color: Colors.white,
+                        color: AppColors.surface,
                         borderRadius: BorderRadius.circular(16),
                       ),
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: const [
                           CircularProgressIndicator(
-                            valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF0963C5)),
+                            valueColor: AlwaysStoppedAnimation<Color>(AppColors.accent),
                           ),
                           SizedBox(height: 16),
                           Text(
@@ -1004,7 +1015,7 @@ class _PrintPreviewScreenState extends State<PrintPreviewScreen> {
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
-                              color: Color(0xFF1E293B),
+                              color: AppColors.onSurface,
                             ),
                           ),
                         ],
@@ -1036,7 +1047,7 @@ class _PrintPreviewScreenState extends State<PrintPreviewScreen> {
         width: 40,
         height: 40,
         decoration: BoxDecoration(
-          color: isSelected ? const Color(0xFF0963C5) : const Color(0xFFF1F5F9),
+          color: isSelected ? AppColors.accent : AppColors.surfaceVariant,
           borderRadius: BorderRadius.circular(8),
         ),
         child: Center(
@@ -1045,13 +1056,13 @@ class _PrintPreviewScreenState extends State<PrintPreviewScreen> {
                   quarterTurns: 2,
                   child: Icon(
                     icon,
-                    color: isSelected ? Colors.white : const Color(0xFF64748B),
+                    color: isSelected ? AppColors.onAccent : AppColors.onSurfaceVariant,
                     size: 20,
                   ),
                 )
               : Icon(
                   icon,
-                  color: isSelected ? Colors.white : const Color(0xFF64748B),
+                  color: isSelected ? AppColors.onAccent : AppColors.onSurfaceVariant,
                   size: 20,
                 ),
         ),
@@ -1070,12 +1081,12 @@ class _PrintPreviewScreenState extends State<PrintPreviewScreen> {
         width: 36,
         height: 36,
         decoration: BoxDecoration(
-          color: isDisabled ? const Color(0xFFF1F5F9).withValues(alpha: 0.5) : const Color(0xFFF1F5F9),
+          color: isDisabled ? AppColors.surfaceVariant.withValues(alpha: 0.5) : AppColors.surfaceVariant,
           borderRadius: BorderRadius.circular(8),
         ),
         child: Icon(
           icon,
-          color: isDisabled ? Colors.grey[400] : const Color(0xFF1E293B),
+          color: isDisabled ? AppColors.shimmer : AppColors.onSurface,
           size: 20,
         ),
       ),

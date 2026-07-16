@@ -7,8 +7,8 @@ import 'package:pdfx/pdfx.dart';
 
 import '../../../core/errors/failures.dart';
 import '../../../core/utils/image_utils.dart';
-import '../../entities/enums/barcode_type.dart';
 import '../../entities/enums/print_enums.dart';
+import '../../entities/preview_data.dart';
 import '../../entities/printer_config.dart';
 import '../barcode/generate_barcode.dart';
 import '../usecase.dart';
@@ -51,10 +51,12 @@ class GeneratePreviewBitmap implements UseCase<Uint8List, GeneratePreviewParams>
   Future<Either<Failure, Uint8List>> _generatePdfPreview(
     GeneratePreviewParams params,
   ) async {
-    final pdfPath = params.data['pdfPath'] as String?;
-    if (pdfPath == null || pdfPath.isEmpty) {
-      return const Left(ValidationFailure(message: 'Thiếu đường dẫn file PDF'));
+    final previewData = params.previewData;
+    if (previewData is! PdfPreviewData) {
+      return const Left(ValidationFailure(message: 'Dữ liệu PDF không hợp lệ'));
     }
+
+    final pdfPath = previewData.pdfPath;
 
     try {
       String cleanPath = pdfPath;
@@ -72,7 +74,7 @@ class GeneratePreviewBitmap implements UseCase<Uint8List, GeneratePreviewParams>
       }
 
       final document = await PdfDocument.openFile(cleanPath);
-      final pageNumber = params.data['pageNumber'] as int? ?? 1;
+      final pageNumber = previewData.pageNumber;
 
       if (pageNumber < 1 || pageNumber > document.pagesCount) {
         await document.close();
@@ -105,7 +107,12 @@ class GeneratePreviewBitmap implements UseCase<Uint8List, GeneratePreviewParams>
   Future<Either<Failure, Uint8List>> _generateImagePreview(
     GeneratePreviewParams params,
   ) async {
-    final imagePath = params.data['imagePath'] as String?;
+    final previewData = params.previewData;
+    if (previewData is! ImagePreviewData) {
+      return const Left(ValidationFailure(message: 'Dữ liệu ảnh không hợp lệ'));
+    }
+
+    final imagePath = previewData.imagePath;
     if (imagePath != null && imagePath.isNotEmpty) {
       try {
         String cleanPath = imagePath;
@@ -128,9 +135,9 @@ class GeneratePreviewBitmap implements UseCase<Uint8List, GeneratePreviewParams>
       }
     }
 
-    final imageBytes = params.data['imageBytes'] as Uint8List?;
+    final imageBytes = previewData.imageBytes;
     if (imageBytes != null) {
-      return Right(imageBytes);
+      return Right(Uint8List.fromList(imageBytes));
     }
 
     return const Left(ValidationFailure(message: 'Thiếu dữ liệu hình ảnh'));
@@ -140,21 +147,16 @@ class GeneratePreviewBitmap implements UseCase<Uint8List, GeneratePreviewParams>
   Future<Either<Failure, Uint8List>> _generateBarcodePreview(
     GeneratePreviewParams params,
   ) async {
-    final barcodeData = params.data['barcodeData'] as Map<String, dynamic>?;
-    if (barcodeData == null) {
-      return const Left(ValidationFailure(message: 'Thiếu dữ liệu barcode'));
+    final previewData = params.previewData;
+    if (previewData is! BarcodePreviewData) {
+      return const Left(ValidationFailure(message: 'Dữ liệu barcode không hợp lệ'));
     }
 
-    final data = barcodeData['data'] as String? ?? '';
-    final type = barcodeData['type'] as BarcodeType? ?? BarcodeType.code128;
-    final height = (barcodeData['height'] as num?)?.toDouble() ?? 100.0;
-    final showText = barcodeData['showText'] as bool? ?? true;
-
     return await generateBarcodeUsecase(GenerateBarcodeParams(
-      data: data,
-      type: type,
-      height: height,
-      showText: showText,
+      data: previewData.data,
+      type: previewData.type,
+      height: previewData.height,
+      showText: previewData.showText,
     ));
   }
 
@@ -162,14 +164,27 @@ class GeneratePreviewBitmap implements UseCase<Uint8List, GeneratePreviewParams>
   Future<Either<Failure, Uint8List>> _generateDeliveryNotePreview(
     GeneratePreviewParams params,
   ) async {
-    final deliveryNoteData = params.data['deliveryNoteData'] as Map<String, dynamic>?;
-    if (deliveryNoteData == null) {
-      return const Left(ValidationFailure(message: 'Thiếu dữ liệu phiếu giao hàng'));
+    final previewData = params.previewData;
+    if (previewData is! DeliveryNotePreviewData) {
+      return const Left(ValidationFailure(message: 'Dữ liệu phiếu giao hàng không hợp lệ'));
     }
 
     try {
+      // Convert typed PreviewData sang Map để tương thích với ImageUtils.generateDeliveryNoteBytes
+      final deliveryNoteMap = {
+        'code': previewData.code,
+        'sender': previewData.sender,
+        'receiver': previewData.receiver,
+        'items': previewData.items
+            .map((item) => {
+                  'name': item.name,
+                  'quantity': item.quantity,
+                  'unit': item.unit,
+                })
+            .toList(),
+      };
       final bytes = await ImageUtils.generateDeliveryNoteBytes(
-        deliveryNoteData: deliveryNoteData,
+        deliveryNoteData: deliveryNoteMap,
         config: params.config,
       );
       return Right(bytes);
@@ -184,18 +199,18 @@ class GeneratePreviewParams extends Equatable {
   /// Loại tài liệu cần sinh preview
   final DocumentType documentType;
 
-  /// Dữ liệu đầu vào (tùy theo loại document)
-  final Map<String, dynamic> data;
+  /// Dữ liệu đầu vào dạng typed — đảm bảo type safety tại compile time.
+  final PreviewData previewData;
 
   /// Cấu hình in hiện tại
   final PrinterConfig config;
 
   const GeneratePreviewParams({
     required this.documentType,
-    required this.data,
+    required this.previewData,
     required this.config,
   });
 
   @override
-  List<Object?> get props => [documentType, data, config];
+  List<Object?> get props => [documentType, previewData, config];
 }

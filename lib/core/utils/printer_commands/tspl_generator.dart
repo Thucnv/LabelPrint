@@ -34,7 +34,7 @@ class TsplGenerator {
   }) {
     if (rgbaBytes.length != imageWidth * imageHeight * 4) {
       throw PrinterException(
-        code: 'errConnectionFailed',
+        code: 'errInvalidImageData',
         message: 'Kích thước ảnh không khớp với mảng bytes RGBA',
       );
     }
